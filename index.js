@@ -35,7 +35,6 @@ let scaleRatio = null;
 let previousTime = null;
 let gameSpeed = GAME_SPEED_START;
 let gameOver = false;
-let hasAddedEventListenersForRestart = false;
 let waitingToStart = true;
 
 function createSprites() {
@@ -124,28 +123,40 @@ function showGameOver() {
   ctx.fillStyle = "grey";
   const x = canvas.width / 4.5;
   const y = canvas.height / 2;
-  ctx.fillText("GAME OVER", x, y);
+  ctx.fillText("Game Over", x, y);
+
+  const restartFont = 32 * scaleRatio;
+  ctx.font = `${restartFont}px Verdana`;
+  ctx.fillText("Press Space to Restart", x - 20 * scaleRatio, y + 50 * scaleRatio);
 }
 
-function setupGameReset() {
-  if (!hasAddedEventListenersForRestart) {
-    hasAddedEventListenersForRestart = true;
+function reset(event) {
+  const isSpaceKey = event.type === "keyup" && event.code === "Space";
+  const isTouch = event.type === "touchstart";
 
-    setTimeout(() => {
-      window.addEventListener("keyup", reset, { once: true });
-      window.addEventListener("touchstart", reset, { once: true });
-    }, 1000);
+  if (waitingToStart) {
+    if (!isSpaceKey && !isTouch) return;
+    waitingToStart = false;
+  } else if (gameOver) {
+    if (!isSpaceKey) return;
+    gameOver = false;
+  } else {
+    return;
   }
-}
 
-function reset() {
-  hasAddedEventListenersForRestart = false;
-  gameOver = false;
-  waitingToStart = false;
   ground.reset();
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
+  previousTime = null;
+
+  player.x = 10 * scaleRatio;
+  player.y = player.yStandingPosition;
+  player.jumpPressed = false;
+  player.jumpInProgress = false;
+  player.falling = false;
+  player.image = player.standingStillImage;
+  player.walkAnimationTimer = player.WALK_ANIMATION_TIMER;
 }
 
 function showStartGameText() {
@@ -188,7 +199,6 @@ function gameLoop(currentTime) {
 
   if (!gameOver && cactiController.collideWith(player)) {
     gameOver = true;
-    setupGameReset();
     score.setHighScore();
   }
 
@@ -211,5 +221,5 @@ function gameLoop(currentTime) {
 
 requestAnimationFrame(gameLoop);
 
-window.addEventListener("keyup", reset, { once: true });
-window.addEventListener("touchstart", reset, { once: true });
+window.addEventListener("keyup", reset);
+window.addEventListener("touchstart", reset);
