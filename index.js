@@ -2,6 +2,7 @@ import Player from "./Player.js";
 import Ground from "./Ground.js";
 import CactiController from "./CactiController.js";
 import Score from "./Score.js";
+import Consumable from "./Consumable.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -18,6 +19,11 @@ const MIN_JUMP_HEIGHT = 150;
 const GROUND_WIDTH = 2400;
 const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.5;
+const FLOW_MULTIPLIER = 1.3;
+const FLOW_DURATION = 5000;
+const CONSUMABLE_UNLOCK_TIME = 12000;
+const CONSUMABLE_SIZE = 12;
+const CONSUMABLE_RESPAWN_COOLDOWN = 5000;
 
 const CACTI_CONFIG = [
   { width: 48 / 1.5, height: 100 / 1.5, image: "images/cactus_1.png" },
@@ -36,6 +42,12 @@ let previousTime = null;
 let gameSpeed = GAME_SPEED_START;
 let gameOver = false;
 let waitingToStart = true;
+let flowActive = false;
+let flowTimer = 0;
+let activePlayTime = 0;
+let consumable = null;
+let consumableCollected = false;
+let consumableCooldown = 0;
 
 function createSprites() {
   const playerWidthInGame = PLAYER_WIDTH * scaleRatio;
@@ -149,6 +161,12 @@ function reset(event) {
   score.reset();
   gameSpeed = GAME_SPEED_START;
   previousTime = null;
+  flowActive = false;
+  flowTimer = 0;
+  activePlayTime = 0;
+  consumable = null;
+  consumableCollected = false;
+  consumableCooldown = 0;
 
   player.x = 10 * scaleRatio;
   player.y = player.yStandingPosition;
@@ -189,11 +207,67 @@ function gameLoop(currentTime) {
   clearScreen();
 
   if (!gameOver && !waitingToStart) {
+    const effectiveGameSpeed = gameSpeed * (flowActive ? FLOW_MULTIPLIER : 1);
+    activePlayTime += frameTimeDelta;
+    if (consumableCooldown > 0) {
+      consumableCooldown -= frameTimeDelta;
+    }
+
+    if (
+      !consumable &&
+      !flowActive &&
+      !consumableCollected &&
+      activePlayTime >= CONSUMABLE_UNLOCK_TIME &&
+      consumableCooldown <= 0
+    ) {
+      const size = CONSUMABLE_SIZE * scaleRatio;
+      const x = canvas.width * 1.2;
+      const latest =
+        typeof cactiController.getLatestActiveCactus === "function"
+          ? cactiController.getLatestActiveCactus()
+          : null;
+      const safeGap = 180 * scaleRatio;
+      const spawnY = ground.y - size - 2 * scaleRatio;
+      const canSpawn =
+        !latest || x - (latest.x + latest.width) >= safeGap;
+
+      if (canSpawn) {
+        consumable = new Consumable(
+          ctx,
+          x,
+          spawnY,
+          size,
+          GROUND_AND_CACTUS_SPEED,
+          scaleRatio
+        );
+      }
+    }
+
+    if (consumable) {
+      consumable.update(effectiveGameSpeed, frameTimeDelta);
+      if (consumable.collidesWith(player)) {
+        consumable = null;
+        flowActive = true;
+        flowTimer = FLOW_DURATION;
+        consumableCollected = true;
+      } else if (consumable.x < -consumable.size) {
+        consumable = null;
+        consumableCooldown = CONSUMABLE_RESPAWN_COOLDOWN;
+      }
+    }
+
+    if (flowActive) {
+      flowTimer -= frameTimeDelta;
+      if (flowTimer <= 0) {
+        flowActive = false;
+      }
+    }
+
     //Update game objects
-    ground.update(gameSpeed, frameTimeDelta);
-    cactiController.update(gameSpeed, frameTimeDelta);
-    player.update(gameSpeed, frameTimeDelta);
-    score.update(frameTimeDelta);
+    ground.update(effectiveGameSpeed, frameTimeDelta);
+    cactiController.update(effectiveGameSpeed, frameTimeDelta);
+    player.update(effectiveGameSpeed, frameTimeDelta);
+    score.update(frameTimeDelta, flowActive ? 2 : 1);
     updateGameSpeed(frameTimeDelta);
   }
 
@@ -206,6 +280,9 @@ function gameLoop(currentTime) {
   ground.draw();
   cactiController.draw();
   player.draw();
+  if (consumable) {
+    consumable.draw();
+  }
   score.draw();
 
   if (gameOver) {

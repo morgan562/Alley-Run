@@ -8,8 +8,8 @@ export default class Score {
     this.scaleRatio = scaleRatio;
   }
 
-  update(frameTimeDelta) {
-    this.score += frameTimeDelta * 0.01;
+  update(frameTimeDelta, multiplier = 1) {
+    this.score += frameTimeDelta * 0.01 * multiplier;
   }
 
   reset() {
