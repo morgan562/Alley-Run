@@ -1,0 +1,26 @@
+{
+  "name": "alley-run",
+  "version": "1.0.0",
+  "description": "[<img src=\"cover.png\" width=\"80%\" >](https://youtu.be/ooru4pyEv1I)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morgan562/Alley-Run.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morgan562/Alley-Run/issues"
+  },
+  "homepage": "https://github.com/morgan562/Alley-Run#readme",
+  "devDependencies": {
+    "vite": "^8.0.2"
+  }
+}
