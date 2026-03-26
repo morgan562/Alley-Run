@@ -6,14 +6,15 @@ import Consumable from "./Consumable.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 const GAME_SPEED_START = 1; // 1.0
 const GAME_SPEED_INCREMENT = 0.00001;
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 200;
-const PLAYER_WIDTH = 88 / 1.5; //58
-const PLAYER_HEIGHT = 94 / 1.5; //62
+const PLAYER_WIDTH = 88 / 1.125; // ~33% larger
+const PLAYER_HEIGHT = 94 / 1.125; // ~33% larger
 const MAX_JUMP_HEIGHT = GAME_HEIGHT;
 const MIN_JUMP_HEIGHT = 150;
 const GROUND_WIDTH = 2400;
@@ -26,9 +27,9 @@ const CONSUMABLE_SIZE = 12;
 const CONSUMABLE_RESPAWN_COOLDOWN = 5000;
 
 const CACTI_CONFIG = [
-  { width: 48 / 1.5, height: 100 / 1.5, image: "images/cactus_1.png" },
-  { width: 98 / 1.5, height: 100 / 1.5, image: "images/cactus_2.png" },
-  { width: 68 / 1.5, height: 70 / 1.5, image: "images/cactus_3.png" },
+  { width: 42 / 1.8, height: 80 / 1.8, image: "images/trash_bag.png" },
+  { width: 140 / 1.6, height: 120 / 1.6, image: "images/dumpster.png" },
+  { width: 90 / 1.7, height: 90 / 1.7, image: "images/small_bin.png" },
 ];
 
 //Game Objects
