@@ -4,27 +4,29 @@ export default class CactiController {
   CACTUS_INTERVAL_MIN = 350;
   CACTUS_INTERVAL_MAX = 1200;
   RETRY_DELAY = 50;
+  TRASH_PAIR_CHANCE = 0.25;
 
   GAP_RULES = {
     small: {
-      small: () => 90 * this.scaleRatio,
-      large: () => 120 * this.scaleRatio,
+      small: () => 95 * this.scaleRatio,
+      large: () => 140 * this.scaleRatio,
     },
     large: {
-      small: () => 120 * this.scaleRatio,
-      large: () => 150 * this.scaleRatio,
+      small: () => 135 * this.scaleRatio,
+      large: () => 170 * this.scaleRatio,
     },
   };
 
   nextCactusInterval = null;
   cacti = [];
 
-  constructor(ctx, cactiImages, scaleRatio, speed) {
+  constructor(ctx, cactiImages, scaleRatio, speed, groundHeight) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.cactiImages = cactiImages;
     this.scaleRatio = scaleRatio;
     this.speed = speed;
+    this.groundHeight = groundHeight;
 
     this.setNextCactusTime();
   }
@@ -84,7 +86,37 @@ export default class CactiController {
       return false;
     }
     const x = this.canvas.width * 1.5;
-    const y = this.canvas.height - cactusImage.height;
+    const y =
+      this.canvas.height -
+      this.groundHeight -
+      cactusImage.height +
+      (cactusImage.yOffset || 0);
+
+    const isTrashBag = cactusImage.image.src.endsWith("trash_bag.png");
+    const spawnPair = isTrashBag && Math.random() < this.TRASH_PAIR_CHANCE;
+
+    if (spawnPair) {
+      const pairGap = 14 * this.scaleRatio;
+      const first = new Cactus(
+        this.ctx,
+        x,
+        y,
+        cactusImage.width,
+        cactusImage.height,
+        cactusImage.image
+      );
+      const second = new Cactus(
+        this.ctx,
+        x + cactusImage.width + pairGap,
+        y,
+        cactusImage.width,
+        cactusImage.height,
+        cactusImage.image
+      );
+      this.cacti.push(first, second);
+      return true;
+    }
+
     const cactus = new Cactus(
       this.ctx,
       x,
