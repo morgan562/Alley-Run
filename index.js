@@ -27,9 +27,8 @@ const CONSUMABLE_SIZE = 12;
 const CONSUMABLE_RESPAWN_COOLDOWN = 5000;
 
 const CACTI_CONFIG = [
-  { width: 42 / 1.8, height: 80 / 1.8, image: "images/trash_bag.png" },
-  { width: 140 / 1.6, height: 120 / 1.6, image: "images/dumpster.png" },
-  { width: 90 / 1.7, height: 90 / 1.7, image: "images/small_bin.png" },
+  { width: 40 / 1.8, height: 60 / 1.8, image: "images/trash_bag.png", yOffset: 6 },
+  { width: 88 / 1.5, height: 78 / 1.5, image: "images/dumpster.png", yOffset: 4 },
 ];
 
 //Game Objects
@@ -83,6 +82,7 @@ function createSprites() {
       image: image,
       width: cactus.width * scaleRatio,
       height: cactus.height * scaleRatio,
+      yOffset: (cactus.yOffset || 0) * scaleRatio,
     };
   });
 
@@ -90,7 +90,8 @@ function createSprites() {
     ctx,
     cactiImages,
     scaleRatio,
-    GROUND_AND_CACTUS_SPEED
+    GROUND_AND_CACTUS_SPEED,
+    groundHeightInGame
   );
 
   score = new Score(ctx, scaleRatio);
