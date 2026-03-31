@@ -1,19 +1,19 @@
 import Cactus from "./Cactus.js";
 
 export default class CactiController {
-  CACTUS_INTERVAL_MIN = 350;
+  CACTUS_INTERVAL_MIN = 380;
   CACTUS_INTERVAL_MAX = 1200;
   RETRY_DELAY = 50;
   TRASH_PAIR_CHANCE = 0.25;
 
   GAP_RULES = {
     small: {
-      small: () => 95 * this.scaleRatio,
-      large: () => 140 * this.scaleRatio,
+      small: () => 108 * this.scaleRatio,
+      large: () => 152 * this.scaleRatio,
     },
     large: {
-      small: () => 135 * this.scaleRatio,
-      large: () => 170 * this.scaleRatio,
+      small: () => 148 * this.scaleRatio,
+      large: () => 184 * this.scaleRatio,
     },
   };
 
@@ -96,7 +96,7 @@ export default class CactiController {
     const spawnPair = isTrashBag && Math.random() < this.TRASH_PAIR_CHANCE;
 
     if (spawnPair) {
-      const pairGap = 14 * this.scaleRatio;
+      const pairGap = 18 * this.scaleRatio;
       const first = new Cactus(
         this.ctx,
         x,

@@ -27,7 +27,7 @@ export default class Score {
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
     const y = 20 * this.scaleRatio;
 
-    const fontSize = 20 * this.scaleRatio;
+    const fontSize = 22 * this.scaleRatio;
     this.ctx.font = `${fontSize}px serif`;
     this.ctx.fillStyle = "#525250";
     const scoreX = this.canvas.width - 75 * this.scaleRatio;
