@@ -13,8 +13,8 @@ const GAME_SPEED_INCREMENT = 0.00001;
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 200;
-const PLAYER_WIDTH = 88 / 1.125; // ~33% larger
-const PLAYER_HEIGHT = 94 / 1.125; // ~33% larger
+const PLAYER_WIDTH = 88 / 1.18; // slight hitbox tighten
+const PLAYER_HEIGHT = 94 / 1.18; // slight hitbox tighten
 const MAX_JUMP_HEIGHT = GAME_HEIGHT;
 const MIN_JUMP_HEIGHT = 150;
 const GROUND_WIDTH = 2400;
@@ -193,7 +193,7 @@ function updateGameSpeed(frameTimeDelta) {
 }
 
 function clearScreen() {
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "#EF721F";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 

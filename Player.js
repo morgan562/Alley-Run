@@ -24,25 +24,29 @@ export default class Player {
     this.yStandingPosition = this.y;
 
     this.standingStillImage = new Image();
-    this.standingStillImage.src = "images/Black-Run-1.png-1.png.png";
+    this.standingStillImage.src = "images/Black-Cat-Run1.png";
     this.image = this.standingStillImage;
 
     const dinoRunImage1 = new Image();
-    dinoRunImage1.src = "images/Black-Run-1.png-2.png.png";
+    dinoRunImage1.src = "images/Black-Cat-Run1.png";
 
     const dinoRunImage2 = new Image();
-    dinoRunImage2.src = "images/Black-Run-1.png-3.png.png";
+    dinoRunImage2.src = "images/Black-Cat-Run2.png";
 
     const dinoRunImage3 = new Image();
-    dinoRunImage3.src = "images/Black-Run-1.png-4.png.png";
+    dinoRunImage3.src = "images/Black-Cat-Run3.png";
 
     const dinoRunImage4 = new Image();
-    dinoRunImage4.src = "images/Black-Run-1.png-5.png.png";
+    dinoRunImage4.src = "images/Black-Cat-Run4.png";
+
+    const dinoRunImage5 = new Image();
+    dinoRunImage5.src = "images/Black-Cat-Run5.png";
 
     this.dinoRunImages.push(dinoRunImage1);
     this.dinoRunImages.push(dinoRunImage2);
     this.dinoRunImages.push(dinoRunImage3);
     this.dinoRunImages.push(dinoRunImage4);
+    this.dinoRunImages.push(dinoRunImage5);
 
     //keyboard
     window.removeEventListener("keydown", this.keydown);
